@@ -1,7 +1,7 @@
 function Home() {
   return (
     <section
-      className=" scroll-smooth h-screen text-white sm:w-full py-12 px-12 sm:px-8  bg-cover flex flex-col gap-y-10 justify-start items-start bg-center "
+      className=" h-screen text-white sm:w-full py-12 md:px-12 px-8  bg-cover flex flex-col gap-y-10 justify-start items-start bg-center "
       style={{ backgroundImage: "url('stadium.avif')" }}
     >
       <h1 className="text-8xl font-bold mb-2 sm:text-4xl md:text-6xl lg:text-6xl">

@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
-import TableComponent from './Table';
+import { useEffect, useState, lazy, Suspense } from 'react';
 import Matches from './Matches';
+const TableComponent = lazy(() => import('./Table') )
 
 function Teams() {
   const [teams, setTeams] = useState([]);
@@ -41,8 +41,9 @@ function Teams() {
   };
 
   return (
-    <section id="teams" className="flex flex-col bg-[#2D4F39] text-white p-12 min-h-screen justify-start items-center">
+    <section id="teams" className="flex flex-col  bg-[#2D4F39] text-white p-12 min-h-screen justify-start items-center">
       <h2 className="text-3xl font-bold mb-4">Choose a Team</h2>
+      <Suspense fallback={<>Loading...</>}></Suspense>
       <select
         className="p-2 my-6 w-80 font-semibold text-[#2D4f39] bg-white"
         value={selectedTeam}
