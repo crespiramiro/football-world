@@ -1,65 +1,98 @@
-import React, { useEffect, useState } from 'react';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from 'keep-react';
 
-function Table({ selectedTeam }) {
-  const [tableData, setTableData] = useState([]);
-
-  useEffect(() => {
-    const fetchTableData = async () => {
-      try {
-        const response = await fetch('https://www.thesportsdb.com/api/v1/json/3/lookuptable.php?l=4328&s=2023-2024');
-        const data = await response.json();
-        setTableData(data.table || []);
-      } catch (error) {
-        console.error('Error fetching table data:', error);
-      }
-    };
-
-    fetchTableData();
-  }, []);
-
+function TableComponent({ selectedTeam, tableData }) {
   return (
-    <section id="table" className="min-h-screen w-full px-4 md:px-24 pb-12 overflow-x-auto">
-      <h2 className="text-3xl font-bold mb-4 text-center">2023/2024 Season Table</h2>
-      <table className="min-w-full table-auto bg-white text-gray-800">
-        <thead>
-          <tr>
-            <th>Position</th>
-            <th>Team</th>
-            <th>Played</th>
-            <th>Won</th>
-            <th>Drawn</th>
-            <th>Lost</th>
-            <th>GF</th>
-            <th>GA</th>
-            <th>GD</th>
-            <th>Points</th>
-          </tr>
-        </thead>
-        <tbody>
+    <div className="table-container min-h-screen bg-[#2D4F39] h-screen w-full px-4 md:px-24 pb-12 overflow-x-auto overflow-y-visible">
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHead>
+              <div className="w-[60px]">Position</div>
+            </TableHead>
+            <TableHead>
+              <div className="w-[150px]">Team</div>
+            </TableHead>
+            <TableHead>
+              <div className="w-[80px]">Played</div>
+            </TableHead>
+            <TableHead>
+              <div className="w-[60px]">Won</div>
+            </TableHead>
+            <TableHead>
+              <div className="w-[60px]">Drawn</div>
+            </TableHead>
+            <TableHead>
+              <div className="w-[60px]">Lost</div>
+            </TableHead>
+            <TableHead>
+              <div className="w-[60px]">GF</div>
+            </TableHead>
+            <TableHead>
+              <div className="w-[60px]">GA</div>
+            </TableHead>
+            <TableHead>
+              <div className="w-[60px]">GD</div>
+            </TableHead>
+            <TableHead>
+              <div className="w-[80px]">Points</div>
+            </TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
           {tableData.map((team) => (
-            <tr
+            <TableRow
               key={team.idTeam}
-              className={`text-center ${team.strTeam === selectedTeam ? 'bg-yellow-200' : ''}`} // Resalta la fila si el equipo coincide
+              className={team.strTeam === selectedTeam ? 'bg-gray-200' : ''}
+              onClick={() => console.log(team.strTeam)}
             >
-              <td>{team.intRank}</td>
-              <td className="flex items-center justify-center">
-                <img src={team.strTeamBadge} alt={`${team.strTeam} badge`} className="w-10 h-10 mr-2" />
-                {team.strTeam}
-              </td>
-              <td>{team.intPlayed}</td>
-              <td>{team.intWin}</td>
-              <td>{team.intDraw}</td>
-              <td>{team.intLoss}</td>
-              <td>{team.intGoalsFor}</td>
-              <td>{team.intGoalsAgainst}</td>
-              <td>{team.intGoalDifference}</td>
-              <td>{team.intPoints}</td>
-            </tr>
+              <TableCell>
+                <div className="text-center">{team.intRank}</div>
+              </TableCell>
+              <TableCell>
+                <div className="flex items-center">
+                  {team.strBadge ? (  // Cambiado a 'strBadge'
+                    <img
+                      src={team.strBadge}
+                      alt={`${team.strTeam} badge`}
+                      className="w-8 h-8 mr-2"
+                      onError={(e) => e.target.src = '/path/to/default/image.png'} // Asegúrate de que esta ruta es correcta
+                    />
+                  ) : (
+                    <div className="w-8 h-8 mr-2">No Badge</div>
+                  )}
+                  {team.strTeam}
+                </div>
+              </TableCell>
+              <TableCell>
+                <div className="text-center">{team.intPlayed}</div>
+              </TableCell>
+              <TableCell>
+                <div className="text-center">{team.intWin}</div>
+              </TableCell>
+              <TableCell>
+                <div className="text-center">{team.intDraw}</div>
+              </TableCell>
+              <TableCell>
+                <div className="text-center">{team.intLoss}</div>
+              </TableCell>
+              <TableCell>
+                <div className="text-center">{team.intGoalsFor}</div>
+              </TableCell>
+              <TableCell>
+                <div className="text-center">{team.intGoalsAgainst}</div>
+              </TableCell>
+              <TableCell>
+                <div className="text-center">{team.intGoalDifference}</div>
+              </TableCell>
+              <TableCell>
+                <div className="text-center">{team.intPoints}</div>
+              </TableCell>
+            </TableRow>
           ))}
-        </tbody>
-      </table>
-    </section>
+        </TableBody>
+      </Table>
+    </div>
   );
 }
 
-export default Table;
+export default TableComponent;
