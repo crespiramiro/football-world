@@ -1,35 +1,16 @@
 import { useState, useEffect } from "react";
+import { fetchTeamEvents } from "./api";
 
 function Matches({ selectedTeam }) {
   const [teamEvents, setTeamEvents] = useState([]);
 
   useEffect(() => {
-    const fetchTeamEvents = async () => {
-      if (!selectedTeam) return;
-
-      try {
-        // Encuentra la información del equipo seleccionado
-        const response = await fetch('https://www.thesportsdb.com/api/v1/json/3/search_all_teams.php?l=English%20Premier%20League');
-        const data = await response.json();
-        const selectedTeamInfo = data.teams.find((teamInfo) => teamInfo.strTeam === selectedTeam);
-
-        if (selectedTeamInfo) {
-          const teamId = selectedTeamInfo.idTeam || selectedTeamInfo.idTeamAPI;
-          const eventsUrl = `https://www.thesportsdb.com/api/v1/json/3/eventslast.php?id=${teamId}`;
-          const eventsResponse = await fetch(eventsUrl);
-          const eventsData = await eventsResponse.json();
-          setTeamEvents(eventsData.results || []);
-        } else {
-          console.error('No se encontró información para el equipo seleccionado');
-          setTeamEvents([]);
-        }
-      } catch (error) {
-        console.error('Error fetching team events:', error);
-        setTeamEvents([]);
-      }
+    const loadTeamEvents = async () => {
+      const events = await fetchTeamEvents(selectedTeam);
+      setTeamEvents(events);
     };
 
-    fetchTeamEvents();
+    loadTeamEvents();
   }, [selectedTeam]);
 
   return (

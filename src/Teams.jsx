@@ -1,40 +1,33 @@
 import { useEffect, useState, lazy, Suspense } from 'react';
 import Matches from './Matches';
 const TableComponent = lazy(() => import('./Table') )
+import { fetchTeams, fetchTableData } from './api';
 
 function Teams() {
   const [teams, setTeams] = useState([]);
   const [selectedTeam, setSelectedTeam] = useState('');
   const [tableData, setTableData] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchTeams = async () => {
-      try {
-        const response = await fetch('https://www.thesportsdb.com/api/v1/json/3/search_all_teams.php?l=English%20Premier%20League');
-        const data = await response.json();
-        console.log(data)
-        setTeams(data.teams || []);
-      } catch (error) {
-        console.error('Error fetching teams:', error);
-      }
+    const getTeams = async () => {
+      setLoading(true);
+      const teamsData = await fetchTeams();
+      setTeams(teamsData);
+      setLoading(false);
     };
 
-    fetchTeams();
-  }, []);
-
-  useEffect(() => {
-    const fetchTableData = async () => {
-      try {
-        const response = await fetch('https://www.thesportsdb.com/api/v1/json/3/lookuptable.php?l=4328&s=2023-2024');
-        const data = await response.json();
-        setTableData(data.table || []);
-      } catch (error) {
-        console.error('Error fetching table data:', error);
-      }
+    const getTableData = async () => {
+      setLoading(true);
+      const tableDataResponse = await fetchTableData();
+      setTableData(tableDataResponse);
+      setLoading(false);
     };
 
-    fetchTableData();
+    getTeams();
+    getTableData();
   }, []);
+
 
   const handleTeamChange = (event) => {
     setSelectedTeam(event.target.value);
